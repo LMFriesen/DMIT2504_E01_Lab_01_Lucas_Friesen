@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".ViewReviewsActivity">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="date" />
+
+    <TextView
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="category" />
+
+    <TextView
+        android:id="@+id/reviewer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="reviewer" />
+
+    <TextView
+        android:id="@+id/nominee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="nominee" />
+
+    <TextView
+        android:id="@+id/review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="review" />
+</LinearLayout>

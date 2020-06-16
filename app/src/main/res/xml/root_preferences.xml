@@ -1,0 +1,33 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:background="#FFFFFF"
+        app:title="App Preferences">
+        <EditTextPreference
+            android:key="username_pref"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Set login username"
+            android:title="Username" />
+        <EditTextPreference
+            android:key="password_pref"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Set password"
+            android:title="Password" />
+        <EditTextPreference
+            android:key="url_pref"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Set URL for review posting"
+            android:title="URL" />
+        <ListPreference
+            android:defaultValue="Green"
+            android:dialogTitle="@string/backgroundcolor"
+            android:entries="@array/color_options"
+            android:entryValues="@array/color_options_values"
+            android:key="backgroundColor_pref"
+            android:summary="@string/backgroundcolor_summary"
+            android:title="@string/backgroundcolor" />
+    </PreferenceCategory>
+</PreferenceScreen>
