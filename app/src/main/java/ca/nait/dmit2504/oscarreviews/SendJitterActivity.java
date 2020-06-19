@@ -2,8 +2,14 @@ package ca.nait.dmit2504.oscarreviews;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.preference.PreferenceManager;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,13 +29,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class SendJitterActivity extends AppCompatActivity {
+public class SendJitterActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = SendJitterActivity.class.getSimpleName();
     private EditText mReviewEdit;
     private EditText mNomineeEdit;
-    private RadioButton mCategoryButton;
+    private RadioGroup mCategoryRadioButton;
     private Button mSubmitButton;
-
+    String category = "film";
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -52,6 +59,64 @@ public class SendJitterActivity extends AppCompatActivity {
         }
     }
 
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.radioButton_bestPicture:
+                if (checked) {
+                    category = "film";
+                }
+                break;
+            case R.id.radioButton_BestActor:
+                if (checked) {
+                    category = "actor";
+                }
+                break;
+            case R.id.radioButton_bestActress:
+                if (checked) {
+                    category = "actress";
+                }
+                break;
+            case R.id.radioButton_bestEditing:
+                if (checked) {
+                    category = "editing";
+                }
+                break;
+            case R.id.radioButton_bestEffects:
+                if (checked) {
+                    category = "effects";
+                }
+                break;
+        }
+        return;
+    }
+
+
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = prefs.getString("username_pref", "Lucas Friesen");
+        String password = prefs.getString("password_pref", "oscar275");
+        String url = prefs.getString("url_pref", "http://www.youcode.ca/Lab01Servlet");
+        String colorName = prefs.getString("backgroundColor_pref", "#678db5");
+        ConstraintLayout layout = findViewById(R.id.linearLayout_activity_main);
+        layout.setBackgroundColor(Color.parseColor(colorName));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,20 +125,9 @@ public class SendJitterActivity extends AppCompatActivity {
         // Find all the views in the layout
         mReviewEdit = findViewById(R.id.editText_review);
         mNomineeEdit = findViewById(R.id.editText_nomineeName);
-        mCategoryButton = findViewById(R.id.radioButton_bestPicture);
+        mCategoryRadioButton = findViewById(R.id.radioGroup);
 
         mSubmitButton = findViewById(R.id.button_submit);
-
-        // Add a click event handler to the submit button using a Java 8 lambda expression
-//        mSubmitButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(final View v) {
-//
-//            }
-//        });
-//        mSubmitButton.setOnClickListener((View view) -> {
-//
-//        });
 
         mSubmitButton.setOnClickListener((View view) -> {
             // Generate an implementation of the Retrofit interface
@@ -85,13 +139,13 @@ public class SendJitterActivity extends AppCompatActivity {
 
             // Call a method in your service
             String review = mReviewEdit.getText().toString();
+            //String reviewer = onSharedPreferenceChanged("","username_pref");
             String reviewer = "Lucas Friesen";
             String nominee = mNomineeEdit.getText().toString();
-            String category = mCategoryButton.getText().toString();
             String password = "oscar275";
 
-            Call<String> getCall = youcodeService.postReview(review, reviewer, nominee, category, password);
-            getCall.enqueue(new Callback<String>() {
+            Call<String> postCall = youcodeService.postReview(review, reviewer, nominee, category, password);
+            postCall.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(final Call<String> call, final Response<String> response) {
                     Log.i(TAG,"Post was successful");

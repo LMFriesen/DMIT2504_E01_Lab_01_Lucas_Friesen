@@ -25,10 +25,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();   // simpleName = "MainActivity"
-    public String category = "film";
     private ListView mOscarListView;
 
     @Override
@@ -93,63 +92,5 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
         });
 
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = prefs.getString("username_pref", "Lucas Friesen");
-        String password = prefs.getString("password_pref", "oscar275");
-        String url = prefs.getString("url_pref", "http://www.youcode.ca/Lab01Servlet");
-        String colorName = prefs.getString("backgroundColor_pref", "#678db5");
-        ConstraintLayout layout = findViewById(R.id.linearLayout_activity_main);
-        layout.setBackgroundColor(Color.parseColor(colorName));
-    }
-
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
-        switch (view.getId()) {
-            case R.id.radioButton_bestPicture:
-                if (checked) {
-                    category = "film";
-                }
-                break;
-            case R.id.radioButton_BestActor:
-                if (checked) {
-                    category = "actor";
-                }
-                break;
-            case R.id.radioButton_bestActress:
-                if (checked) {
-                    category = "actress";
-                }
-                break;
-            case R.id.radioButton_bestEditing:
-                if (checked) {
-                    category = "editing";
-                }
-                break;
-            case R.id.radioButton_bestEffects:
-                if (checked) {
-                    category = "effects";
-                }
-                break;
-        }
-        return;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener(this);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences prefs = androidx.preference.PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 }
