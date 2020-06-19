@@ -19,11 +19,6 @@ import android.widget.RadioButton;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,36 +56,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.jitters_list_view);
+        setContentView(R.layout.activity_main);
 
         //find the textview in the layout
-        mOscarListView = findViewById(R.id.jittersListView);
-
-        //Generate an implementation of the Retrofit interface
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.youcode.ca/")
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-        YoucodeService youcodeService = retrofit.create(YoucodeService.class);
-
-        //Call a method in your service
-        Call<String> getCall = youcodeService.listOscarReviews();
-        getCall.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(final Call<String> call, final Response<String> response) {
-                Log.i(TAG, "Success getting data");
-                String responseBodyText = response.body();
-                String[] responseArray = responseBodyText.split("\r\n");
-
-                ArrayAdapter<String> jittersAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, responseArray);
-                mOscarListView.setAdapter(jittersAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e(TAG, "Failure to get data");
-            }
-        });
+        //mOscarListView = findViewById(R.id.jittersListView);
 
     }
 }

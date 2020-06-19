@@ -41,50 +41,24 @@ public class ViewReviewsActivity extends AppCompatActivity {
                 // Convert the single string of values into a list of values
                 List<Jitter> jittersList = new ArrayList<>();
                 String[] jittersArray = responseBody.split("\r\n");
-                /*for (String jitterText : jittersArray) {
+                for (int index = 0; index < jittersArray.length; index += 5) {
                     Jitter currentJitter = new Jitter();
-                    String date = jitterText.substring(0, jitterText.indexOf(" *-*-* "));
-                    String reviewer = jitterText.substring(1, jitterText.indexOf("\n"));
-                    String category = jitterText.substring(2, jitterText.indexOf("\n"));
-                    String nominee = jitterText.substring(3, jitterText.indexOf("\n"));
-                    String review = jitterText.substring(4, jitterText.indexOf("\n"));
+                    String date = jittersArray[index];
+                    String reviewer = jittersArray[index + 1];
+                    String category = jittersArray[index + 2];
+                    String nominee = jittersArray[index + 3];
+                    String review = jittersArray[index + 4];
+
                     currentJitter.setDate(date);
                     currentJitter.setReviewer(reviewer);
                     currentJitter.setCategory(category);
                     currentJitter.setNominee(nominee);
                     currentJitter.setReview(review);
-                    // add currentJitter to jittersList
                     jittersList.add(currentJitter);
-                }*/
-                try {
-                    BufferedReader reader = new BufferedReader(new StringReader(responseBody));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        Jitter currentJitter = new Jitter();
-                        String date = line;
-                        String reviewer = reader.readLine();
-                        String category = reader.readLine();
-                        String nominee = reader.readLine();
-                        String review = reader.readLine();
-                        currentJitter.setDate(date);
-                        currentJitter.setReviewer(reviewer);
-                        currentJitter.setCategory(category);
-                        currentJitter.setNominee(nominee);
-                        currentJitter.setReview(review);
-                        // add currentJitter to jittersList
-                        jittersList.add(currentJitter);
-                    }
-
-
-                    // Find the ListView and set the adapter for the listview
-                    ListView jittersListView = findViewById(R.id.activity_custom_list_view_jitters_listview);
-                    JittersListViewAdapter jitterAdapter = new JittersListViewAdapter(getApplicationContext(), jittersList);
-                    jittersListView.setAdapter(jitterAdapter);
                 }
-                catch (Exception ex) {
-                    ex.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Fetch jitters was not successful.", Toast.LENGTH_SHORT).show();
-                }
+                ListView jittersListView = findViewById(R.id.activity_custom_list_view_jitters_listview);
+                JittersListViewAdapter jitterAdapter = new JittersListViewAdapter(getApplicationContext(), jittersList);
+                jittersListView.setAdapter(jitterAdapter);
             }
             @Override
             public void onFailure(final Call<String> call, final Throwable t) {

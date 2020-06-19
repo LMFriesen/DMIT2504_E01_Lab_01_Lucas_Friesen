@@ -18,8 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +31,6 @@ public class SendJitterActivity extends AppCompatActivity implements SharedPrefe
     private static final String TAG = SendJitterActivity.class.getSimpleName();
     private EditText mReviewEdit;
     private EditText mNomineeEdit;
-    private RadioGroup mCategoryRadioButton;
     private Button mSubmitButton;
     String category = "film";
 
@@ -46,6 +43,10 @@ public class SendJitterActivity extends AppCompatActivity implements SharedPrefe
     @Override
     public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_item_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
             case R.id.menu_item_list_jitters:
                 Intent listJittersIntent = new Intent(this, MainActivity.class);
                 startActivity(listJittersIntent);
@@ -64,27 +65,27 @@ public class SendJitterActivity extends AppCompatActivity implements SharedPrefe
         switch (view.getId()) {
             case R.id.radioButton_bestPicture:
                 if (checked) {
-                    category = "film";
+                    category = "Best Picture";
                 }
                 break;
             case R.id.radioButton_BestActor:
                 if (checked) {
-                    category = "actor";
+                    category = "Best Actor";
                 }
                 break;
             case R.id.radioButton_bestActress:
                 if (checked) {
-                    category = "actress";
+                    category = "Best Actress";
                 }
                 break;
             case R.id.radioButton_bestEditing:
                 if (checked) {
-                    category = "editing";
+                    category = "Film Editing";
                 }
                 break;
             case R.id.radioButton_bestEffects:
                 if (checked) {
-                    category = "effects";
+                    category = "Visual Effects";
                 }
                 break;
         }
@@ -120,13 +121,11 @@ public class SendJitterActivity extends AppCompatActivity implements SharedPrefe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.jitters_list_view);
 
         // Find all the views in the layout
         mReviewEdit = findViewById(R.id.editText_review);
         mNomineeEdit = findViewById(R.id.editText_nomineeName);
-        mCategoryRadioButton = findViewById(R.id.radioGroup);
-
         mSubmitButton = findViewById(R.id.button_submit);
 
         mSubmitButton.setOnClickListener((View view) -> {
@@ -137,15 +136,15 @@ public class SendJitterActivity extends AppCompatActivity implements SharedPrefe
                     .build();
             YoucodeService youcodeService = retrofit.create(YoucodeService.class);
 
-            // Call a method in your service
-            String review = mReviewEdit.getText().toString();
-            //String reviewer = onSharedPreferenceChanged("","username_pref");
-            String reviewer = "Lucas Friesen";
-            String nominee = mNomineeEdit.getText().toString();
-            String password = "oscar275";
 
-            Call<String> postCall = youcodeService.postReview(review, reviewer, nominee, category, password);
-            postCall.enqueue(new Callback<String>() {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            String reviewer = prefs.getString("username_pref", "Lucas Friesen");
+            String password = prefs.getString("password_pref", "oscar275");
+            String review = mReviewEdit.getText().toString();
+            String nominee = mNomineeEdit.getText().toString();
+
+            Call<String> getCall = youcodeService.postReview(review, reviewer, nominee, category, password);
+            getCall.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(final Call<String> call, final Response<String> response) {
                     Log.i(TAG,"Post was successful");
